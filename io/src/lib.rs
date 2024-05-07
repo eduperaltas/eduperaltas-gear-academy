@@ -1,7 +1,10 @@
 #![no_std]
-
-use gmeta::{In, InOut, Out, Metadata};
+//! hello
+use gmeta::{In, InOut, Metadata, Out};
 use gstd::prelude::*;
+use gstd::{Encode, Decode}; // Import necessary functions
+use scale_info::TypeInfo; // Import TypeInfo derive macro (assuming you're using scale-info)
+
 
 pub struct PebblesMetadata;
 
@@ -13,7 +16,7 @@ impl Metadata for PebblesMetadata {
     type Others = ();
     type Signal = ();
 }
-
+/// pub struct PebblesInit 
 #[derive(Debug, Default, Clone, Encode, Decode, TypeInfo)]
 pub struct PebblesInit {
     pub difficulty: DifficultyLevel,
@@ -21,7 +24,8 @@ pub struct PebblesInit {
     pub max_pebbles_per_turn: u32,
 }
 
-#[derive(Debug, Default, Clone, Encode, Decode, TypeInfo)]
+/// another function
+#[derive(Debug, Default, Clone, Encode, Decode, TypeInfo, PartialEq, Eq)]
 pub enum DifficultyLevel {
     #[default]
     Easy,
@@ -38,14 +42,17 @@ pub enum PebblesAction {
         max_pebbles_per_turn: u32,
     },
 }
-
-#[derive(Debug, Clone, Encode, Decode, TypeInfo)]
+#[derive(Encode, Decode, TypeInfo, Debug, Clone, PartialEq, Eq)]
+#[codec(crate = gstd::codec)]
+#[scale_info(crate = gstd::scale_info)]
 pub enum PebblesEvent {
     CounterTurn(u32),
     Won(Player),
 }
 
-#[derive(Debug, Default, Clone, Encode, Decode, TypeInfo)]
+#[derive(Debug, Default, Clone, Encode, Decode, TypeInfo, PartialEq, Eq)]
+#[codec(crate = gstd::codec)]
+#[scale_info(crate = gstd::scale_info)]
 pub enum Player {
     #[default]
     User,
@@ -61,4 +68,3 @@ pub struct GameState {
     pub first_player: Player,
     pub winner: Option<Player>,
 }
-
